@@ -6,7 +6,7 @@ Concept based on https://github.com/mystika/onepagescroll
 ##Features
 - lightweight
 - customizable
-- no dependency(pure js)
+- npure js
 - support touch events
 - support for multiple instances
 
@@ -15,8 +15,8 @@ Concept based on https://github.com/mystika/onepagescroll
 download js and css into your project and link it.
 
 ```html
-<script type="text/javascript" src="./js/onepagescroll.js"></script>
-<link rel="stylesheet" type="text/css" href="./css/onepagescroll.css">
+<script type="text/javascript" src="./fullpagescroll.js"></script>
+<link rel="stylesheet" type="text/css" href="./fullpagescroll.css">
 ```
 
 ##Usage
@@ -35,13 +35,13 @@ you only need single parent element and some child elements.
 and then create a new instance
 
 ```javascript
-new onepagescroll(selector);
+new fullpagescroll(selector);
 ```
 
 
 ##Options(Attributes)
 ```javascript
-new onepagescroll(selector,{
+new fullpagescroll(selector,{
   pageContainer: 'section',     //child elements selector. use if you don't want to use section for page.
   animationType: 'ease-in-out', //determine css3 animation that will run when page changes
                                 //ex) 'ease', 'ease-out-in', 'cubic-bezier(0.2, 0.75, 0.5, 1.15)'
