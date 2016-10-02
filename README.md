@@ -1,7 +1,7 @@
 #fullpagescroll.js
 
 This is a small script to create full page sections that you can scroll between.
-Concept based on https://github.com/mystika/onepagescroll
+Concept based on https://github.com/peachananr/purejs-onepage-scroll
 
 ##Features
 - lightweight
