@@ -6,8 +6,8 @@ Concept based on https://github.com/peachananr/purejs-onepage-scroll
 ##Features
 - lightweight
 - customizable
-- npure js
-- support touch events
+- pure js
+- supports touch events
 - support for multiple instances
 
 ##Installation
