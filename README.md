@@ -1,7 +1,6 @@
 #fullpagescroll.js
 
-This is a small script to create full page sections that you can scroll between.
-Concept based on https://github.com/peachananr/purejs-onepage-scroll
+Create full page scrollable sections with ease!
 
 ##Features
 - lightweight
@@ -9,6 +8,7 @@ Concept based on https://github.com/peachananr/purejs-onepage-scroll
 - pure js
 - supports touch events
 - support for multiple instances
+- supports scrollable containers
 
 ##Installation
 
@@ -20,9 +20,6 @@ download js and css into your project and link it.
 ```
 
 ##Usage
-
-you only need parent element and some child elements.
-Note that each section needs to contain a content wrapper as its only child. Reason for that is to allow to scroll when content's height is greater than window's height.
 
 ```html
 <div class="pages">
@@ -37,13 +34,13 @@ Note that each section needs to contain a content wrapper as its only child. Rea
 	</section>
 </div>
 ```
-
 and then create a new instance
 
 ```javascript
 new fullpagescroll(selector);
 ```
 
+Note that each section needs to contain a content wrapper as its only child. Reason for that is to allow to scroll when content's height is greater than window's height.
 
 ##Options(Attributes)
 ```javascript
@@ -58,3 +55,5 @@ new fullpagescroll(selector,{
   direction: 'vertical'         //determine direction of page scroll. options available are 'vertical' and 'horizontal'
 });
 ```
+
+Concept based on https://github.com/peachananr/purejs-onepage-scroll
