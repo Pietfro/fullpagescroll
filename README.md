@@ -21,14 +21,20 @@ download js and css into your project and link it.
 
 ##Usage
 
-you only need single parent element and some child elements.
+you only need parent element and some child elements.
+Note that each section needs to contain a content wrapper as its only child. Reason for that is to allow to scroll when content's height is greater than window's height.
 
 ```html
 <div class="pages">
-	<section>PAGE ONE</section>
-	<section>PAGE TWO</section>
-	<section>PAGE THREE</section>
-	<section>PAGE FOUR</section>
+	<section>
+		<div>Page 1</div>
+	</section>
+	<section>
+		<div>Page 2</div>
+	</section>
+	<section>
+		<div>Page 3</div>
+	</section>
 </div>
 ```
 

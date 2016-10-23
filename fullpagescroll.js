@@ -28,13 +28,13 @@ var fullpagescroll = function(selector, options) {
     };
 
     this.setting = this.extend({}, this.def, options);
-	this.selector = selector;
+    this.selector = selector;
 
 }
 
 /* initialization */
-fullpagescroll.prototype.init = function () {
-	var me = this;
+fullpagescroll.prototype.init = function() {
+    var me = this;
     this.selector.addEventListener('wheel', this.onScrollEventHandler.bind(this));
 
     this.css(this.selector, {
@@ -45,10 +45,10 @@ fullpagescroll.prototype.init = function () {
     if (this.setting.keyboard) {
         this.selector.addEventListener('keydown', function(e) {
             if (keyUp[e.keyCode]) {
-				this.changePage(1, this.pages.length, -1);
-			} else if (keyDown[e.keyCode]) {
-				this.changePage(this.pages.length, 1, 1);
-			}
+                this.changePage(1, this.pages.length, -1);
+            } else if (keyDown[e.keyCode]) {
+                this.changePage(this.pages.length, 1, 1);
+            }
         });
     }
 
@@ -95,54 +95,64 @@ fullpagescroll.prototype.init = function () {
     }
 
 
-	/* swipe */
-	var fpos = 0;
-	var lpos = 0;
-	var _n = 90;
+    /* swipe */
+    var fpos = 0;
+    var lpos = 0;
+    var _n = 90;
 
-	//bind touch
-	this.selector.addEventListener('touchstart', function(e) {
-	    e.preventDefault();
-	    if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
-	        var touch = e.touches[0] || e.changedTouches[0];
-	        if (this.setting.direction == 'vertical')
-	            fpos = touch.pageY;
-	        else if (this.setting.direction == 'horizontal')
-	            fpos = touch.pageX;
-	    }
-	});
+    //bind touch
+    this.selector.addEventListener('touchstart', function(e) {
+        if (!this.detectIfElementIsScrolled(e)) {
+            return;
+        }
 
-	this.selector.addEventListener('touchend', function(e) {
-	    e.preventDefault();
+        if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+            var touch = e.touches[0] || e.changedTouches[0];
+            if (this.setting.direction == 'vertical')
+                fpos = touch.pageY;
+            else if (this.setting.direction == 'horizontal')
+                fpos = touch.pageX;
+        }
+    }.bind(this));
 
-	    if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
-	        var touch = e.touches[0] || e.changedTouches[0];
-	        if (this.selector.setting.direction == 'vertical')
-	            lpos = touch.pageY;
-	        else if (this.selector.setting.direction == 'horizontal')
-	            lpos = touch.pageX;
-	    }
-	    if (fpos + _n < lpos)
-	        this.changePage(1, this.pages.length, -1);
-	    else if (fpos > lpos + _n)
-	        this.changePage(this.pages.length, 1, 1);
-	});
+    this.selector.addEventListener('touchend', function(e) {
+        if (!this.detectIfElementIsScrolled(e)) {
+            return;
+        }
+
+        if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+            var touch = e.touches[0] || e.changedTouches[0];
+            if (this.setting.direction == 'vertical')
+                lpos = touch.pageY;
+            else if (this.setting.direction == 'horizontal')
+                lpos = touch.pageX;
+        }
+        if (fpos + _n < lpos)
+            this.changePage(1, this.pages.length, -1);
+        else if (fpos > lpos + _n)
+            this.changePage(this.pages.length, 1, 1);
+    }.bind(this));
 
 }
 
 /* wheel event handler */
-fullpagescroll.prototype.onScrollEventHandler = function (e) {
-	this.debounce(function() {
-		if (e.wheelDelta > 0) {
-	        this.changePage(1, this.pages.length, -1);
-	    } else {
-	        this.changePage(this.pages.length, 1, 1);
-		}
-	}.bind(this), 50)();
+fullpagescroll.prototype.onScrollEventHandler = function(e) {
+
+    if (!this.detectIfElementIsScrolled(e)) {
+        return;
+    }
+
+    this.debounce(function() {
+        if (e.wheelDelta > 0) {
+            this.changePage(1, this.pages.length, -1);
+        } else {
+            this.changePage(this.pages.length, 1, 1);
+        }
+    }.bind(this), 50)();
 }
 
 /* dected transitions completion for block duplicated scrolling */
-fullpagescroll.prototype.detectTransitionEnd = function () {
+fullpagescroll.prototype.detectTransitionEnd = function() {
     var t;
     var el = document.createElement('fakeelement');
     var transitions = {
@@ -158,6 +168,24 @@ fullpagescroll.prototype.detectTransitionEnd = function () {
     return true;
 }
 
+fullpagescroll.prototype.detectIfElementIsScrolled = function(e) {
+    var container = e.target.closest('section > div');
+    var scrollTop = Math.ceil(container.parentNode.scrollTop);
+
+    /* scroll down */
+    if (e.wheelDelta < 0) {
+      if (container.offsetHeight - scrollTop !== container.parentNode.offsetHeight) {
+        return false;
+      }
+    } else /* scroll top */ {
+      if (scrollTop) {
+        return false;
+      }
+    }
+
+    return true;
+}
+
 /* css setter */
 fullpagescroll.prototype.css = function(obj, styles) {
     for (var _style in styles)
@@ -168,18 +196,19 @@ fullpagescroll.prototype.css = function(obj, styles) {
 
 /* debounce */
 fullpagescroll.prototype.debounce = function(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
+    var timeout;
+    return function() {
+        var context = this,
+            args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
 };
 
 /* extend function for user customization */
